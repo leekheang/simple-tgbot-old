@@ -1,0 +1,14 @@
+deploy_production:
+  stage: deploy
+  image: kroniak/ssh-client
+  environment: Production
+  script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh user0@68.183.178.168 "cd /home/user0/project/koompibot && git pull && docker-compose up --build -d && exit"
+
+  only:
+    - master
